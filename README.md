@@ -17,8 +17,8 @@ Broken Bucket： 和上面类似，区别就在于是存储桶过期了，我们
 ## 用法
 
 ```
-   python3 main.py -h            
-usage: main.py [-h] -i INPUT [-t THREADS] [-o OUTPUT] [-v]
+   python3 main.py -h
+usage: main.py [-h] -i INPUT [-t THREADS] [-o OUTPUT] [-j] [-v]
 
 输入URL列表，输出每个URL包含的链接中是否存在可以接管的Broken Link
 
@@ -27,9 +27,10 @@ optional arguments:
   -i INPUT, --input INPUT
                         输入文件的路径
   -t THREADS, --threads THREADS
-                        并发线程数，默认10
+                        并发线程数，默认5
   -o OUTPUT, --output OUTPUT
                         输出文件的路径
+  -j, --json            保存JSON格式的结果
   -v, --verbose         启用详细模式
 ```
 
