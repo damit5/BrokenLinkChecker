@@ -107,7 +107,7 @@ def checkDomainRegistration(domain):
         if args.verbose:
             logger.debug(f"Error: {e}")
         # 找不到记录
-        if "No match for" in str(e):
+        if "No match for" in str(e) or "Domain not found." in str(e):
             AllBrokenDomain.append(domain)
         return True
 
