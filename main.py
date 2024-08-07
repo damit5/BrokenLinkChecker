@@ -224,7 +224,7 @@ if __name__ == '__main__':
             if args.output:
                 with open(args.output, "a+") as f:
                     if args.json:
-                        f.write(json.dumps(genVulnJson(url, AllBrokenDomain)) + "\n")
+                        f.write(json.dumps(genVulnJson(url, AllBrokenBucket)) + "\n")
                     else:
                         f.write(f"Broken Bucket: {url} -> {AllBrokenBucket}\n")
 
