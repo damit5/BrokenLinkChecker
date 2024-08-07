@@ -1,0 +1,2 @@
+Broken Domain: http://btest.gm7.org/test.html -> ['testbrokenlink.org']
+Broken Bucket: http://btest.gm7.org/test.html -> ['http://smtp.arssollertia.com']
