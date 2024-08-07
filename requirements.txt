@@ -2,4 +2,4 @@ tqdm
 requests
 tld
 loguru
-whois
+python-whois
