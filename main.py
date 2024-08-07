@@ -7,6 +7,7 @@ from loguru import logger
 from concurrent.futures import ThreadPoolExecutor, ALL_COMPLETED, wait
 import argparse
 from tqdm import tqdm
+import json
 urllib3.disable_warnings()
 
 # 域名可以注册的结果
@@ -14,7 +15,8 @@ AllBrokenDomain = []
 # 可以接管的存储桶
 AllBrokenBucket = []
 
-def help():
+
+def menu():
     """
     帮助文档
 
@@ -44,6 +46,12 @@ def help():
         type=str,
         help='输出文件的路径',
         required=False
+    )
+
+    parser.add_argument(
+        '-j', '--json',
+        action='store_true',
+        help='保存JSON格式的结果'
     )
 
     parser.add_argument(
@@ -161,9 +169,26 @@ def batchCheckBucketNotFound(urls):
     wait(allTask, return_when=ALL_COMPLETED)
 
 
+def genVulnJson(vulnUrl, detail):
+    template = {
+        "漏洞名": "Broken Link Found",
+        "漏洞等级": "高危",
+        "漏洞URL": vulnUrl,
+        "问题说明": f"发现在URL {vulnUrl} 中存在未注册的域名/存储桶 {detail}； Broken Link（失效链接）是指在网页或应用中点击后无法正常访问的链接，通常返回404错误页面或其他类似提示。这种问题可能由于链接目标被移除、网址更改、拼写错误或服务器不可用等原因导致。",
+        "漏洞危害": "未注册的域名、存储桶意味着任何人都可以注册它，并在其上托管任意内容。如果该域名被恶意方注册并放置恶意代码，任何加载该脚本的用户都会受到攻击。",
+        "安全建议": "最好移除或禁止加载来自该域名的脚本，同时通过 CSP 限制允许加载的脚本来源，防止潜在的恶意加载。",
+        "请求数据包": "",
+        "响应数据包": "",
+        "扫描类型": "漏洞扫描",
+        "目标域名": "",
+        "资产名": ""
+    }
+    return template
+
+
 if __name__ == '__main__':
     # 初始化帮助参数
-    args = help()
+    args = menu()
 
     # 读取URL列表
     with open(args.input, "r") as f:
@@ -184,7 +209,10 @@ if __name__ == '__main__':
             # 写入结果
             if args.output:
                 with open(args.output, "a+") as f:
-                    f.write(f"Broken Domain: {url} -> {AllBrokenDomain}\n")
+                    if args.json:
+                        f.write(json.dumps(genVulnJson(url, AllBrokenDomain)) + "\n")
+                    else:
+                        f.write(f"Broken Domain: {url} -> {AllBrokenDomain}\n")
 
         # 检查是否存在存储桶接管
         if args.verbose:
@@ -195,7 +223,10 @@ if __name__ == '__main__':
             # 写入结果
             if args.output:
                 with open(args.output, "a+") as f:
-                    f.write(f"Broken Bucket: {url} -> {AllBrokenBucket}\n")
+                    if args.json:
+                        f.write(json.dumps(genVulnJson(url, AllBrokenDomain)) + "\n")
+                    else:
+                        f.write(f"Broken Bucket: {url} -> {AllBrokenBucket}\n")
 
 
 
