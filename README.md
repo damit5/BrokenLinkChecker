@@ -16,22 +16,32 @@ Broken Bucket： 和上面类似，区别就在于是存储桶过期了，我们
 
 ## 用法
 
-```
-   python3 main.py -h
+```text
+python3 main.py -h
 usage: main.py [-h] -i INPUT [-t THREADS] [-o OUTPUT] [-j] [-v]
+               [--timeout TIMEOUT] [--retries RETRIES]
+               [--max-response-mb MAX_RESPONSE_MB] [--verify-tls]
 
 输入URL列表，输出每个URL包含的链接中是否存在可以接管的Broken Link
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        输入文件的路径
-  -t THREADS, --threads THREADS
+  -i, --input INPUT     输入文件的路径
+  -t, --threads THREADS
                         并发线程数，默认5
-  -o OUTPUT, --output OUTPUT
-                        输出文件的路径
+  -o, --output OUTPUT   输出文件的路径
   -j, --json            保存JSON格式的结果
   -v, --verbose         启用详细模式
+  --timeout TIMEOUT     连接和读取超时时间，默认3秒
+  --retries RETRIES     HTTP请求重试次数，默认2
+  --max-response-mb MAX_RESPONSE_MB
+                        单个响应最多读取的MB数，默认5
+  --verify-tls          启用TLS证书校验，默认关闭以兼容原有行为
 ```
+
+程序只扫描输入文件中的页面，不会递归爬取页面里发现的其他链接。
+
+WHOIS 检查现在区分 `registered`、`unregistered`、`unknown` 和 `error`
+四种状态，只有明确未注册的域名才会作为 Broken Domain 输出。
 
 ![image-20240807上午112453287](imgs/image-20240807上午112453287.png)
